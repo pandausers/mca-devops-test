@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: my-backend-app:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: SPRING_POSTGRES_URL
+          value: "jdbc:postgresql://my-db-test.io:5432/mydatabase"
+        - name: SPRING_POSTGRES_USERNAME
+          value: "myapplication"
+        - name: SPRING_POSTGRES_PASSWORD
+          value: "M3P@ssw0rd!"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  selector:
+    app: backend
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
